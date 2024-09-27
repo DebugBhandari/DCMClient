@@ -1,0 +1,92 @@
+.coursePage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.courseContainer {
+  width: 80%;
+  background-color: #888;
+  color: black;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.courseDesc {
+  width: 50%;
+  padding: 10px;
+}
+.courseButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+.userPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+.userDiv {
+  width: 80%;
+  background-color: #888;
+  color: black;
+  border: 2px solid black;
+}
+.userContainer {
+  padding: 20px;
+  margin: 8px;
+  display: flex;
+  min-width: 94%;
+  min-height: 80px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.buttonClass {
+  width: 160px;
+  margin: 8px;
+}
+.activeButton {
+  background-color: #646cff;
+  color: white;
+}
+.navbar {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+  width: 90%;
+}
+.passiveA {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  margin: 8px;
+}
+.activeA {
+  color: #646cff;
+}
+.titleOfTheApp {
+  font-size: 2em;
+  color: white;
+}
+.helloMessage {
+  text-align: left;
+  font-size: 1em;
+}
+.activeUserName {
+  color: #646cff;
+  font-size: 1.5em;
+}
+.navButtons {
+  height: 20px;
+  position: absolute;
+  top: 90px;
+  right: 20px;
+}
