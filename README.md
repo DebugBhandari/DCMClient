@@ -1,8 +1,7 @@
-# React + Vite
+# Frontend for Coursehub, a takehome assignment for DCM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+npm i to install all dependencies.
+npm run dev to run it locally.
+config credentials are ignored in the git push.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Tools used: Vite, React, Zustand, Axios
