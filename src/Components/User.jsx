@@ -13,10 +13,10 @@ function User({ learner }) {
     axiosInstance
       .get(`/api/now/table/sys_user/${learner.user_id}`)
       .then((res) => {setUsername(res.data.result.name), setLoading(false)});
-  }, [learner.learner_id]);
+  }, []);
   return (
     <div className="userContainer">
-      {loading?<h3>Loading names...</h3>:<h3>{username}</h3>}
+      {loading?<h3>Loading User...</h3>:<h3>{username}</h3>}
       {activeLearner.learner_id === learner.learner_id ? (
         <button className="activeButton">Active User</button>
       ) : (

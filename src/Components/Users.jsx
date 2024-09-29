@@ -1,22 +1,28 @@
-import './index.css';
-import User from './User';
-import useZuStore from '../zuStore';
+import "./index.css";
+import User from "./User";
+import useZuStore from "../zuStore";
+import { useEffect } from "react";
 
 function Users() {
-    const learners = useZuStore((state) => ( state.learners ));
-    
-   
-    
-    return (
-        <div className="userPage">
-         {learners && learners.map((learner) => (
-            <div className="userDiv" key={learner.learner_id}>
-          
-         <User learner={learner}  /></div>
-         ))}
-       
-        </div>
-    )
-    }
+  // Rest of the code
+
+  const learners = useZuStore((state) => state.learners);
+
+  const setLearners = useZuStore((state) => state.setLearners);
+  useEffect(() => {
+    setLearners();
+  }, []);
+
+  return (
+    <div className="userPage">
+      {learners &&
+        learners.map((learner) => (
+          <div className="userDiv" key={learner.learner_id}>
+            <User learner={learner} />
+          </div>
+        ))}
+    </div>
+  );
+}
 
 export default Users;

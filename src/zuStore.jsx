@@ -13,11 +13,7 @@ const useZuStore = create(
       setLearners: async () => {
         try {
           const response = await axiosInstance.get(
-            `/api/now/table/x_quo_coursehub_learner`,
-            {
-              "content-type": "application/json",
-              
-            }
+            `/api/now/table/x_quo_coursehub_learner`
           );
           set({
             learners: response?.data.result.map((learner) => ({
@@ -67,6 +63,8 @@ const useZuStore = create(
         }
       },
       unsubscribeMyCourse: (courseId) => set(() => ({ myCourses: get().myCourses.filter((myCourse) => myCourse.course.value !== courseId) })),
+      dragDivHeight: 0,
+      setDragDivHeight: (height) => set(() => ({ dragDivHeight: height })),
     }),
     {
       name: "courseHubStorage", // name of the item in the storage (must be unique)

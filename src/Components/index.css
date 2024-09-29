@@ -1,29 +1,63 @@
+.dragDropArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .coursePage {
+  width: 500px;
+  min-height: 100dvh;
+  margin: 40px;
+}
+.coursePageDiv {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  width: 100%;
+  min-height: 600px;
+  flex-wrap: wrap;
+  border: 1px solid black;
 }
 .courseContainer {
-  width: 80%;
+  width: 200px;
   background-color: #888;
   color: black;
   border: 2px solid black;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  margin: 10px;
+  min-height: 240px;
 }
 .courseDesc {
-  width: 50%;
-  padding: 10px;
+  width: 90%;
 }
 .courseButtons {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 40%;
+}
+.myCoursePageDiv {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  background-color: rgb(126, 126, 126);
+}
+.myCourseContainer {
+  width: 200px;
+  background-color: #242424;
+  color: rgb(255, 255, 255);
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  height: 240px;
 }
 .userPage {
   display: flex;
@@ -33,10 +67,11 @@
   width: 100%;
 }
 .userDiv {
-  width: 80%;
+  width: 60%;
   background-color: #888;
   color: black;
   border: 2px solid black;
+  margin: 12px;
 }
 .userContainer {
   padding: 20px;
@@ -89,4 +124,26 @@
   position: absolute;
   top: 90px;
   right: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .dragDropArea {
+    flex-direction: column;
+  }
+  .coursePage {
+    width: 100%;
+  }
+  .myCoursePageDiv {
+    min-height: 100dvh;
+  }
+
+  .userPage {
+    width: 100%;
+  }
+  .userDiv {
+    width: 100%;
+  }
+  .userContainer {
+    flex-direction: column;
+  }
 }

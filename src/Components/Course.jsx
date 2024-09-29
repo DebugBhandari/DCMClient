@@ -16,27 +16,48 @@ function Course({ course }) {
   const unsubscribeMyCourse = useZuStore((state) => state.unsubscribeMyCourse);
   const activeLearner = useZuStore((state) => state.activeLearner);
   const [loading, setLoading] = useState(false);
+  const subscribed = myCourses.some(
+    (mycourse) => mycourse.course.value == course.sys_id
+  );
   console.log(loading);
 
   const subscribeToCourse = async (courseId, learner_id) => {
     setLoading(true);
-    axiosInstance
-      .post(`/api/now/table/x_quo_coursehub_course_subscription`, {
-        course: courseId,
-        learner: learner_id
-      })
-      .then((response) => {
-        console.log(response);
-        setMyCourses();
-      })
-      .catch((error) => {
-        console.error("Error subscribing to course:", error);
-      })
-      .finally(() => setLoading(false));
+    if (learner_id) {
+      axiosInstance
+        .post(`/api/now/table/x_quo_coursehub_course_subscription`, {
+          course: courseId,
+          learner: learner_id
+        })
+        .then((response) => {
+          console.log(response);
+          setMyCourses();
+        })
+        .catch((error) => {
+          console.error("Error subscribing to course:", error);
+        })
+        .finally(setTimeout(() => setLoading(false), 1200));
+    } else {
+      setLoading(false);
+      alert("Please select a user to subscribe to courses.");
+    }
   };
 
+  const handleOnDrag = (e, courseId, learnerId) => {
+    e.dataTransfer.setData("courseId", courseId);
+    e.dataTransfer.setData("learnerId", learnerId);
+  }
+
   return (
-    <div key={course.sys_id} className="courseContainer">
+    <div
+      key={course.sys_id}
+      className="courseContainer"
+      id="draggableElement"
+      draggable
+      onDragStart={(e) =>
+        handleOnDrag(e, course.sys_id, activeLearner.learner_id)
+      }
+    >
       <div className="courseDesc">
         <h2>{course.title}</h2>
         <p>{course.description}</p>
@@ -50,9 +71,11 @@ function Course({ course }) {
         </p>
       </div>
       <div className="courseButtons">
-        { myCourses.some(
-          (mycourse) => mycourse.course.value == course.sys_id
-        ) ? (
+        {loading ? (
+          <button className="buttonClass" disabled>
+            Subscribing...
+          </button>
+        ) : subscribed ? (
           <button
             className="buttonClass"
             onClick={() => {
@@ -66,11 +89,7 @@ function Course({ course }) {
           >
             Unsubscribe
           </button>
-        ) : (loading ? (
-            <button className="buttonClass" disabled>
-              Subscribing...
-            </button>
-          ) :
+        ) : (
           <button
             className="buttonClass"
             onClick={() =>
