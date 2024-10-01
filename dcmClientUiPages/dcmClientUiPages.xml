@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+    <script>
+        function subscribeCourse(courseId, learnerId) {
+            var gr = new GlideRecord('x_quo_coursehub_course_subscription');
+            gr.add
+            gr.addQuery('course', courseId);
+            gr.addQuery('learner', learnerId);
+            gr.query();
+            if (gr.next()) {
+                alert('Already subscribed to this course')
+            } else {
+                var gr2 = new GlideRecord("x_quo_coursehub_course_subscription");
+                gr2.initialize();
+                gr2.course = courseId;
+                gr2.learner = learnerId;
+                gr2.insert();
+                location.reload();
+            }
+
+        }
+
+        function unSubscribeCourse(subCourseId) {
+            var gr = new GlideRecord('x_quo_coursehub_course_subscription');
+            gr.addQuery('sys_id', subCourseId);
+            gr.query();
+            while (gr.next()) {
+                gr.deleteRecord();
+                setInterval(function() {
+                    location.reload()
+                }, 300);
+            }
+
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev, courseId, learnerId) {
+            ev.dataTransfer.setData("courseId", courseId);
+            ev.dataTransfer.setData("learnerId", learnerId);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var courseId = ev.dataTransfer.getData("courseId");
+            var learnerId = ev.dataTransfer.getData("learnerId");
+            subscribeCourse(courseId, learnerId);
+        }
+    </script>
+    <j:set var="jvar_sysUser_ID" value="${gs.getUserID()}" />
+    <div class="navBar">
+        <h1><b>Coursehub</b></h1>
+        <h3>Hi,<b id="userName">${gs.getUserDisplayName()}</b></h3>
+
+    </div>
+    <g:evaluate var="jvar_learner" object="true">
+        var learner = new GlideRecord('x_quo_coursehub_learner');
+        learner.addQuery("user_account","${jvar_sysUser_ID}");
+        learner.query();
+        learner;
+    </g:evaluate>
+    <j:if test="${!jvar_learner.hasNext()}">
+        <h3>Only learners are allowed in this page.</h3>
+    </j:if>
+    <j:if test="${jvar_learner.next()}">
+        <j:set var="jvar_learner_ID" value="${jvar_learner.getValue('sys_id')}" />
+
+        <g2:evaluate>
+            var course = new GlideRecord('x_quo_coursehub_course');
+
+            course.query();
+            course;
+        </g2:evaluate>
+        <div class="mainCourseContainer">
+            <div class="partitionContainer">
+                Available Courses
+                <div class="dragContainer">
+                    <j2:while test="$[course.next()]">
+                        <div class="courseContainer" draggable="true" ondragstart="drag(event,'$[course.getValue('sys_id')]','${jvar_learner_ID}')">
+                            <h3>$[course.getValue('title')]</h3>
+                            <p>$[course.getValue('description')]</p>
+
+                            <g2:evaluate>
+                                var courseDuration = new GlideDateTime(course.getValue('duration'));
+                                var epochDate = new GlideDateTime("1970-01-01 00:00:00");
+                                var diffInMillis = courseDuration.getNumericValue() - epochDate.getNumericValue();
+                                var diffInDays = Math.floor(diffInMillis / (1000 * 60 * 60 * 24));
+								var stringDays = diffInDays.toString();
+                               
+                            </g2:evaluate>
+
+                            <p>$[stringDays] days</p>
+
+
+                            <button class="subButton" onclick="subscribeCourse('$[course.getValue('sys_id')]','${jvar_learner_ID}')">Subscribe</button>
+                        </div>
+                    </j2:while>
+
+                </div>
+            </div>
+            <g2:evaluate>
+                var courseSub = new GlideRecord('x_quo_coursehub_course_subscription');
+                courseSub.addQuery('learner','${jvar_learner_ID}');
+                courseSub.query();
+                courseSub;
+            </g2:evaluate>
+            <div class="partitionContainer">
+                My Courses
+                <div class="dragContainer" id="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <j2:if test="$[!courseSub.hasNext()]">
+                        <h3>Drag and drop courses here.</h3>
+                    </j2:if>
+                    <j2:while test="$[courseSub.next()]">
+                        <div class="courseContainer">
+                            <g2:evaluate>
+                                var courseName = new GlideRecord('x_quo_coursehub_course');
+                                courseName.addQuery('sys_id','$[courseSub.getValue('course')]')
+                                courseName.query();
+                                courseName;
+                            </g2:evaluate>
+                            <j2:if test="$[courseName.next()]">
+                                <h4>$[courseName.getValue('title')]</h4>
+
+                                <p>$[courseSub.getValue('subscription_date')]</p>
+
+
+                                <button class="subButton" onclick="unSubscribeCourse('$[courseSub.getValue('sys_id')]')">Unsubscribe</button>
+                            </j2:if>
+                        </div>
+                    </j2:while>
+                </div>
+            </div>
+        </div>
+    </j:if>
+
+
+    <style>
+        * {
+            margin: 4px;
+            padding: 4px;
+
+        }
+
+        body {
+            background-color: #242424;
+            ;
+            color: white;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 100px;
+        }
+
+        .navBar {
+            width: 100%;
+            display: flex;
+            justify-content: left;
+            flex-direction: column;
+        }
+
+        #userName {
+            color: #cdfad9;
+        }
+
+        .mainCourseContainer {
+
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            width: 1200px;
+
+        }
+
+        .partitionContainer {
+            width: 500px;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .dragContainer {
+            width: 500px;
+            height: 700px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .courseContainer {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+            margin: 8px;
+            background-color: #888;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            color: black;
+        }
+
+        .subButton {
+            background-color: #6e6e6e;
+        }
+    </style>
+
+</j:jelly>
